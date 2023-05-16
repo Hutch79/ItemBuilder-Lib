@@ -14,6 +14,7 @@ public class ItemBuilder {
 
 
     /**
+     * Creates a new Item.
      * @param material Item Material
      */
     ItemBuilder(Material material) {
@@ -21,6 +22,7 @@ public class ItemBuilder {
     }
 
     /**
+     * Set the Material for the current item.
      * @param material Item Material
      */
     public void setMaterial(Material material) {
@@ -28,13 +30,15 @@ public class ItemBuilder {
     }
 
     /**
-     * @param name Item Displayname
+     * Set the display name for the current item
+     * @param name Item Display-name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
+     * Set the Item to Unbreakable or not.
      * @param unbreakable True: Set Unbreakable - False: Not Unbreakable
      */
     public void setUnbreakable(Boolean unbreakable) {
@@ -42,8 +46,9 @@ public class ItemBuilder {
     }
 
     /**
-     * @return Complete Item based on previous configuration
-     */
+     * Create the Item based on previous configurations and return it.
+     * @return Created Item
+     * */
     public ItemStack getItem() {
         ItemStack itemStack = new ItemStack(this.material);
         if (this.material != Material.valueOf("PLAYER_HEAD")) {
