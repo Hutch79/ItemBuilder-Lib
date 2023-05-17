@@ -1,6 +1,8 @@
 package ch.hutch79.itembuilder;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -12,6 +14,9 @@ public class ItemBuilder {
     private String name;
     private Boolean unbreakable = false;
     private int count = 1;
+    private Boolean enchanted = false;
+    private Enchantment enchantedValue;
+    private int enchantedLevel;
 
 
     /**
@@ -24,7 +29,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Set the Material for the current item.
+     * Sets the Material for the current item.
      * @param material Material which should be used to create the item
      */
     public void setMaterial(Material material) {
@@ -32,7 +37,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Set the display name for the current item
+     * Sets the display name for the current item
      * @param name The Item displayname to be set on creation
      */
     public void setDisplayName(String name) {
@@ -40,7 +45,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Set the Item to Unbreakable or not.
+     * Sets the Item to Unbreakable or not.
      * @param unbreakable True: Unbreakable - False: Not Unbreakable
      */
     public void setUnbreakable(Boolean unbreakable) {
@@ -48,7 +53,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Set the size of the ItemStack
+     * Sets the size of the ItemStack
      * @param count The count of Items in this ItemStack
      */
     public void setAmount(int count) {
@@ -61,9 +66,14 @@ public class ItemBuilder {
         }
     }
 
+    public void setEnchantement(String enchantement, int level) {
+        this.enchanted = true;
+        this.enchantedValue = Enchantment.getByName(Objects.requireNonNull(enchantement));
+        this.enchantedLevel = Objects.requireNonNull(level);
+    }
 
     /**
-     * Create the Item, based on previous configurations, and return it.
+     * Creates the Item, based on this configurations
      * @return Created Item
      * */
     public ItemStack getItem() {
@@ -77,6 +87,11 @@ public class ItemBuilder {
 
             itemMeta.setUnbreakable(this.unbreakable);
             itemStack.setAmount(this.count);
+
+            if (this.enchanted) {
+                itemMeta.addEnchant(this.enchantedValue, this.enchantedLevel, true);
+                itemMeta.addItemFlags(ItemFlag.valueOf("HIDE_ENCHANTS"));
+            }
 
 
 
