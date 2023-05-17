@@ -1,52 +1,69 @@
 package ch.hutch79.itembuilder;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.Objects;
 
 public class ItemBuilder {
 
     private Material material;
     private String name;
-    private Boolean unbreakable;
+    private Boolean unbreakable = false;
+    private int count = 1;
 
 
     /**
      * Creates a new Item.
-     * @param material Item Material
+     * @param material Material which should be used to create the item
      */
     ItemBuilder(Material material) {
-        this.material = material;
+
+        this.material = Objects.requireNonNull(material);
     }
 
     /**
      * Set the Material for the current item.
-     * @param material Item Material
+     * @param material Material which should be used to create the item
      */
     public void setMaterial(Material material) {
-        this.material = material;
+        this.material = Objects.requireNonNull(material);
     }
 
     /**
      * Set the display name for the current item
-     * @param name Item Display-name
+     * @param name The Item displayname to be set on creation
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String name) {
+        this.name = Objects.requireNonNull(name);
     }
 
     /**
      * Set the Item to Unbreakable or not.
-     * @param unbreakable True: Set Unbreakable - False: Not Unbreakable
+     * @param unbreakable True: Unbreakable - False: Not Unbreakable
      */
     public void setUnbreakable(Boolean unbreakable) {
-        this.unbreakable = unbreakable;
+        this.unbreakable = Objects.requireNonNull(unbreakable);
     }
 
     /**
-     * Create the Item based on previous configurations and return it.
+     * Set the size of the ItemStack
+     * @param count The count of Items in this ItemStack
+     */
+    public void setAmount(int count) {
+        this.count = count;
+
+        if (count < 1) {
+            this.count = 1;
+        } else if (count > 64) {
+            this.count = 64;
+        }
+    }
+
+
+    /**
+     * Create the Item, based on previous configurations, and return it.
      * @return Created Item
      * */
     public ItemStack getItem() {
@@ -58,9 +75,9 @@ public class ItemBuilder {
                 itemMeta.setDisplayName(this.name);
             }
 
-            if (this.unbreakable != null) {
-                itemMeta.setUnbreakable(this.unbreakable);
-            }
+            itemMeta.setUnbreakable(this.unbreakable);
+            itemStack.setAmount(this.count);
+
 
 
             itemStack.setItemMeta(itemMeta);
