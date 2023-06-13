@@ -1,11 +1,14 @@
 package ch.hutch79.itembuilder;
 
+import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ItemBuilder {
@@ -14,9 +17,7 @@ public class ItemBuilder {
     private String name;
     private Boolean unbreakable = false;
     private int count = 1;
-    private Boolean enchanted = false;
-    private Enchantment enchantedValue;
-    private int enchantedLevel;
+    private HashMap<Enchantment, Integer> enchantments;
 
 
     /**
@@ -24,7 +25,6 @@ public class ItemBuilder {
      * @param material Material which should be used to create the item
      */
     ItemBuilder(Material material) {
-
         this.material = Objects.requireNonNull(material);
     }
 
@@ -66,10 +66,13 @@ public class ItemBuilder {
         }
     }
 
-    public void setEnchantement(String enchantement, int level) {
-        this.enchanted = true;
-        this.enchantedValue = Enchantment.getByName(Objects.requireNonNull(enchantement));
-        this.enchantedLevel = Objects.requireNonNull(level);
+    /**
+     * Add as many enchantments as you want to an Item.
+     * @param enchantement Enchantment Name
+     * @param level Enchantment Level
+     */
+    public void addEnchantement(String enchantement, int level) {
+        enchantments.put(Enchantment.getByName(enchantement), level);
     }
 
     /**
@@ -88,9 +91,10 @@ public class ItemBuilder {
             itemMeta.setUnbreakable(this.unbreakable);
             itemStack.setAmount(this.count);
 
-            if (this.enchanted) {
-                itemMeta.addEnchant(this.enchantedValue, this.enchantedLevel, true);
-                itemMeta.addItemFlags(ItemFlag.valueOf("HIDE_ENCHANTS"));
+            if (!this.enchantments.isEmpty()) {
+                for (Map.Entry<Enchantment, Integer> set: this.enchantments.entrySet()) {
+                    itemMeta.addEnchant(set.getKey(), set.getValue(), true);
+                }
             }
 
 
